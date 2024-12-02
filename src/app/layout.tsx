@@ -18,6 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head><script defer data-domain="ohrid-guide" src="https://plausible.io/js/script.js"></script></head>
       <body className={inter.className}>
         <div className="flex min-h-screen flex-col">
           <Navbar />
