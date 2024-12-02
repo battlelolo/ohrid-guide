@@ -52,14 +52,14 @@ export default function TourFilters({ locations, onFilterChange }: TourFiltersPr
         <div className="flex gap-2 items-center">
           <input
             type="number"
-            placeholder="Min €"
+            placeholder="Min $"
             className="w-full p-2 border rounded-md"
             onChange={(e) => handleFilterChange('minPrice', Number(e.target.value))}
           />
           <span>-</span>
           <input
             type="number"
-            placeholder="Max €"
+            placeholder="Max $"
             className="w-full p-2 border rounded-md"
             onChange={(e) => handleFilterChange('maxPrice', Number(e.target.value))}
           />
