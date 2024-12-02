@@ -1,8 +1,7 @@
-// src/app/bookings/page.tsx
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'  // 이 줄을 추가해주세요
 import BookingList from '@/components/bookings/booking-list'
-
 
 export default async function BookingsPage() {
   const cookieStore = cookies()
