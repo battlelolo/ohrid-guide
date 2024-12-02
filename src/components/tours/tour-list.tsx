@@ -1,4 +1,3 @@
-// src/components/tours/tour-list.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -16,16 +15,31 @@ export default function TourList() {
 
   useEffect(() => {
     const fetchTours = async () => {
+      // tour_images 관계를 포함하도록 쿼리 수정
       const { data, error } = await supabase
         .from('tours')
-        .select('*')
+        .select(`
+          *,
+          tour_images (
+            id,
+            image_url,
+            is_main
+          )
+        `)
 
       if (!error && data) {
-        setTours(data)
-        setFilteredTours(data)
-        // 고유한 위치 목록 추출
+        // 이미지 데이터를 포함한 투어 데이터 설정
+        const toursWithImages = data.map(tour => ({
+          ...tour,
+          images: tour.tour_images // types/tour.ts에 정의된 images 필드에 매핑
+        }))
+        
+        setTours(toursWithImages)
+        setFilteredTours(toursWithImages)
         const uniqueLocations = Array.from(new Set(data.map(tour => tour.location)))
         setLocations(uniqueLocations)
+      } else {
+        console.error('Error fetching tours:', error)
       }
       setLoading(false)
     }
@@ -36,7 +50,6 @@ export default function TourList() {
   const handleFilterChange = (filters: FilterOptions) => {
     let filtered = tours
 
-    // 검색어 필터링
     if (filters.search) {
       const searchLower = filters.search.toLowerCase()
       filtered = filtered.filter(tour => 
@@ -45,20 +58,17 @@ export default function TourList() {
       )
     }
 
-    // 가격 범위 필터링
     if (filters.minPrice > 0 || filters.maxPrice < 1000) {
       filtered = filtered.filter(tour => 
         tour.price >= filters.minPrice && tour.price <= filters.maxPrice
       )
     }
 
-    // 기간 필터링
     if (filters.duration) {
       const maxDuration = parseInt(filters.duration)
       filtered = filtered.filter(tour => tour.duration <= maxDuration)
     }
 
-    // 위치 필터링
     if (filters.location) {
       filtered = filtered.filter(tour => tour.location === filters.location)
     }
@@ -67,7 +77,9 @@ export default function TourList() {
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div className="flex justify-center items-center min-h-[200px]">
+      <div className="text-gray-500">Loading tours...</div>
+    </div>
   }
 
   return (
