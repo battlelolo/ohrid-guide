@@ -4,9 +4,15 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import TourCard from '@/components/tours/tour-card'
+import { Tour } from '@/types/tour'
+
+interface WishlistItem {
+  tour_id: string
+  tours: Tour
+}
 
 export default function WishlistPage() {
-  const [wishlistTours, setWishlistTours] = useState([])
+  const [wishlistTours, setWishlistTours] = useState<Tour[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
@@ -24,13 +30,17 @@ export default function WishlistPage() {
         tour_id,
         tours (
           *,
-          images (*)
+          tour_images (*)
         )
       `)
       .eq('user_id', user.id)
 
     if (data) {
-      setWishlistTours(data.map(item => item.tours))
+      const tours = data.map((item) => ({
+        ...item.tours,
+        images: item.tours.tour_images
+      }))
+      setWishlistTours(tours)
     }
     setLoading(false)
   }
