@@ -7,8 +7,20 @@ import TourCard from '@/components/tours/tour-card'
 import { Tour } from '@/types/tour'
 
 interface WishlistItem {
-  tour_id: string
-  tours: Tour
+  tour_id: string;
+  tours: {
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+    currency: string;
+    tour_images: {
+      id: string;
+      image_url: string;
+      is_main: boolean;
+    }[];
+    [key: string]: any; // 다른 tour 속성들
+  }
 }
 
 export default function WishlistPage() {
@@ -24,7 +36,7 @@ export default function WishlistPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('wishlists')
       .select(`
         tour_id,
@@ -35,10 +47,10 @@ export default function WishlistPage() {
       `)
       .eq('user_id', user.id)
 
-    if (data) {
-      const tours = data.map((item) => ({
+    if (data && Array.isArray(data)) {
+      const tours: Tour[] = data.map((item: WishlistItem) => ({
         ...item.tours,
-        images: item.tours.tour_images
+        images: item.tours.tour_images || []
       }))
       setWishlistTours(tours)
     }
