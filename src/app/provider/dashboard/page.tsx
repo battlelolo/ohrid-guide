@@ -5,7 +5,6 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Calendar, DollarSign, Users, Star } from 'lucide-react'
 
-
 interface DashboardStats {
  totalRevenue: number
  totalBookings: number
