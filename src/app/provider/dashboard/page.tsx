@@ -121,39 +121,38 @@ export default function ProviderDashboard() {
         }
       }
 
-      // Get latest bookings
       const { data: latestBookings, error: latestBookingsError } = await supabase
-        .from('bookings')
-        .select(`
-          id,
-          booking_date,
-          number_of_people,
-          total_price,
-          status,
-          tours (
-            title
-          )
-        `)
-        .eq('provider_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(5)
+  .from('bookings')
+  .select(`
+    id,
+    booking_date,
+    number_of_people,
+    total_price,
+    status,
+    tours (
+      title
+    )
+  `)
+  .eq('provider_id', user.id)
+  .order('created_at', { ascending: false })
+  .limit(5);
 
-      if (latestBookingsError) {
-        console.error('Latest bookings error:', latestBookingsError)
-      }
+if (latestBookingsError) {
+  console.error('Latest bookings error:', latestBookingsError);
+}
 
-      if (latestBookings) {
-        setLatestBookings(latestBookings.map(booking => ({
-          id: booking.id,
-          booking_date: booking.booking_date,
-          number_of_people: booking.number_of_people,
-          total_price: booking.total_price,
-          status: booking.status,
-          tours: {
-            title: booking.tours.title
-          }
-        })))
-      }
+if (latestBookings) {
+  setLatestBookings(latestBookings.map(booking => ({
+    id: booking.id,
+    booking_date: booking.booking_date,
+    number_of_people: booking.number_of_people,
+    total_price: booking.total_price,
+    status: booking.status,
+    tours: {
+      title: booking.tours.title
+    }
+  })));
+}
 
       // Get recent reviews
       const { data: recentReviews, error: recentReviewsError } = await supabase
