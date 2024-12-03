@@ -306,3 +306,23 @@
 //     </div>
 //   )
 // }
+
+import React from 'react';
+
+const HomePage = () => {
+  return (
+    <div>
+      <header>
+        <h1>Welcome to My Next.js App</h1>
+      </header>
+      <main>
+        <p>This is the main content of the page.</p>
+      </main>
+      <footer>
+        <p>&copy; 2023 My Next.js App</p>
+      </footer>
+    </div>
+  );
+};
+
+export default HomePage;
