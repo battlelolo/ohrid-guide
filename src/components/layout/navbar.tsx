@@ -55,8 +55,8 @@ export default function Navbar() {
             </Link>
             {user ? (
               <>
-                <Link href="/profile" className="text-gray-700 hover:text-gray-900">
-                  Profile
+                <Link href="/booking" className="text-gray-700 hover:text-gray-900">
+                  Booking
                 </Link>
                 <button
                   onClick={handleSignOut}
