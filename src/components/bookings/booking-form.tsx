@@ -21,69 +21,59 @@ export default function BookingForm({ tourId, price, currency, maxParticipants }
   const supabase = createClient()
 
   const totalPrice = price * participants
+// src/components/bookings/booking-form.tsx
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setLoading(true)
+  setError('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-
-    try {
-      // 현재 로그인한 사용자 확인
-      const { data: { user }, error: authError } = await supabase.auth.getUser()
-      
-      if (authError) {
-        console.error('Auth error:', authError)
-        setError('Authentication error occurred')
-        return
-      }
-
-      if (!user) {
-        setError('Please login to make a booking')
-        return
-      }
-
-      console.log('Creating booking with data:', {
-        tour_id: tourId,
-        user_id: user.id,
-        booking_date: date,
-        number_of_people: participants,
-        total_price: totalPrice,
-        status: 'confirmed',
-        payment_status: 'completed'
-      })
-
-      // 예약 생성
-      const { data, error: bookingError } = await supabase
-        .from('bookings')
-        .insert({
-          tour_id: tourId,
-          user_id: user.id,
-          booking_date: date,
-          number_of_people: participants,
-          total_price: totalPrice,
-          status: 'confirmed',
-          payment_status: 'completed'
-        })
-        .select()
-        .single()
-
-      if (bookingError) {
-        console.error('Booking error details:', bookingError)
-        throw bookingError
-      }
-
-      console.log('Booking created:', data)
-
-      // 성공시 예약 확인 페이지로 이동
-      router.push('/bookings')
-      router.refresh()
-    } catch (err) {
-      console.error('Booking error:', err)
-      setError(err instanceof Error ? err.message : 'Failed to make booking. Please try again.')
-    } finally {
-      setLoading(false)
+  try {
+    // 현재 로그인한 사용자 확인
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      setError('Please login to make a booking')
+      return
     }
+
+    // 투어 정보에서 provider_id 가져오기
+    const { data: tourData } = await supabase
+      .from('tours')
+      .select('provider_id')
+      .eq('id', tourId)
+      .single()
+
+    if (!tourData) {
+      setError('Tour not found')
+      return
+    }
+
+    // 예약 생성
+    const bookingData = {
+      tour_id: tourId,
+      user_id: user.id,
+      provider_id: tourData.provider_id,  // provider_id 추가
+      booking_date: date,
+      number_of_people: participants,
+      total_price: totalPrice,
+      status: 'pending',
+      payment_status: 'completed'
+    }
+
+    const { error: bookingError } = await supabase
+      .from('bookings')
+      .insert(bookingData)
+
+    if (bookingError) throw bookingError
+
+    router.push('/bookings')
+    router.refresh()
+  } catch (err) {
+    console.error('Booking error:', err)
+    setError('Failed to make booking. Please try again.')
+  } finally {
+    setLoading(false)
   }
+}
 
   // 오늘 날짜를 YYYY-MM-DD 형식으로 가져오기
   const today = new Date().toISOString().split('T')[0]
