@@ -12,28 +12,13 @@ interface DashboardStats {
   averageRating: number
 }
 
-interface RawBookingData {
-  id: string
-  tour_id: string
-  booking_date: string
-  number_of_people: number
-  total_price: number
-  status: string
-  payment_status: string
-  tours: {
-    id: string
-    title: string
-    currency: string
-  }
-}
-
-interface TourBasicInfo {
+interface Tour {
   id: string
   title: string
   currency: string
 }
 
-interface BookingWithTour {
+interface Booking {
   id: string
   tour_id: string
   booking_date: string
@@ -41,7 +26,7 @@ interface BookingWithTour {
   total_price: number
   status: string
   payment_status: string
-  tours: TourBasicInfo
+  tour: Tour
 }
 
 export default function ProviderDashboard() {
@@ -51,7 +36,7 @@ export default function ProviderDashboard() {
     pendingBookings: 0,
     averageRating: 0
   })
-  const [latestBookings, setLatestBookings] = useState<BookingWithTour[]>([])
+  const [latestBookings, setLatestBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -115,7 +100,7 @@ export default function ProviderDashboard() {
           total_price,
           status,
           payment_status,
-          tours!inner (
+          tour:tours (
             id,
             title,
             currency
@@ -130,22 +115,7 @@ export default function ProviderDashboard() {
       }
 
       if (data) {
-        const processedBookings: BookingWithTour[] = (data as any[]).map(booking => ({
-          id: booking.id,
-          tour_id: booking.tour_id,
-          booking_date: booking.booking_date,
-          number_of_people: booking.number_of_people,
-          total_price: booking.total_price,
-          status: booking.status,
-          payment_status: booking.payment_status,
-          tours: {
-            id: booking.tours[0].id,
-            title: booking.tours[0].title,
-            currency: booking.tours[0].currency
-          }
-        }))
-        
-        setLatestBookings(processedBookings)
+        setLatestBookings(data as Booking[])
       }
 
     } catch (error) {
@@ -213,7 +183,7 @@ export default function ProviderDashboard() {
               <div key={booking.id} className="border-b pb-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium">{booking.tours.title}</p>
+                    <p className="font-medium">{booking.tour?.title}</p>
                     <p className="text-sm text-gray-600">
                       Date: {new Date(booking.booking_date).toLocaleDateString()}
                     </p>
@@ -225,7 +195,7 @@ export default function ProviderDashboard() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">{booking.tours.currency}{booking.total_price}</p>
+                    <p className="font-medium">{booking.tour?.currency}{booking.total_price}</p>
                     <span className="text-sm px-2 py-1 rounded-full bg-gray-100">
                       {booking.status}
                     </span>
