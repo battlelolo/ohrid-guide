@@ -27,20 +27,7 @@ interface LatestBooking {
   total_price: number
   status: string
   payment_status: string
-  tours: Tour
-}
-
-interface Review {
-  id: string
-  rating: number
-  comment: string
-  created_at: string
-  tours: {
-    title: string
-  }
-  profiles: {
-    full_name: string
-  }
+  tours: Tour[]
 }
 
 export default function ProviderDashboard() {
@@ -51,7 +38,6 @@ export default function ProviderDashboard() {
     averageRating: 0
   })
   const [latestBookings, setLatestBookings] = useState<LatestBooking[]>([])
-  const [recentReviews, setRecentReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -131,7 +117,11 @@ export default function ProviderDashboard() {
       }
 
       if (latestBookings) {
-        setLatestBookings(latestBookings)
+        const processedBookings = latestBookings.map(booking => ({
+          ...booking,
+          tours: Array.isArray(booking.tours) ? [booking.tours] : [booking.tours]
+        }))
+        setLatestBookings(processedBookings)
       }
 
     } catch (error) {
@@ -199,7 +189,9 @@ export default function ProviderDashboard() {
               <div key={booking.id} className="border-b pb-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium">{booking.tours?.title || 'Unnamed Tour'}</p>
+                    <p className="font-medium">
+                      {booking.tours[0]?.title || 'Unnamed Tour'}
+                    </p>
                     <p className="text-sm text-gray-600">
                       Date: {new Date(booking.booking_date).toLocaleDateString()}
                     </p>
@@ -211,7 +203,7 @@ export default function ProviderDashboard() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">{booking.tours?.currency || '€'}{booking.total_price}</p>
+                    <p className="font-medium">{booking.tours[0]?.currency || '€'}{booking.total_price}</p>
                     <span className="text-sm px-2 py-1 rounded-full bg-gray-100">
                       {booking.status}
                     </span>
