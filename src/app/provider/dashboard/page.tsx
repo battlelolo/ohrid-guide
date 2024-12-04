@@ -86,38 +86,20 @@ export default function ProviderDashboard() {
       }
 
       const { data: latestBookings, error: latestBookingsError } = await supabase
-        .from('bookings')
-        .select(`
-          id,
-          tour_id,
-          booking_date,
-          number_of_people,
-          total_price,
-          status,
-          payment_status,
-          tours:tour_id (
-            id,
-            provider_id,
-            title,
-            description,
-            price,
-            currency,
-            duration,
-            max_participants,
-            location,
-            longitude,
-            latitude,
-            meeting_point,
-            included_items,
-            excluded_items,
-            requirements,
-            cancellation_policy,
-            average_rating,
-            total_reviews,
-            created_at,
-            updated_at
-          )
-        `)
+  .from('bookings')
+  .select(`
+    id,
+    tour_id,
+    booking_date,
+    number_of_people,
+    total_price,
+    status,
+    payment_status,
+    tours!inner ( 
+      id,
+      title
+    )
+  `)
         .eq('provider_id', user.id)
         .order('created_at', { ascending: false })
         .limit(5)
