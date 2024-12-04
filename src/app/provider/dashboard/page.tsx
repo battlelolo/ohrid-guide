@@ -129,9 +129,8 @@ export default function ProviderDashboard() {
           number_of_people,
           total_price,
           status,
-     tours:tours!inner (
-  title
-)
+          tours!inner (
+            title
           )
         `)
         .eq('provider_id', user.id)
@@ -149,7 +148,9 @@ export default function ProviderDashboard() {
           number_of_people: booking.number_of_people,
           total_price: booking.total_price,
           status: booking.status,
-          tours: booking.tours as { title: string }
+          tours: {
+            title: booking.tours?.title || ''
+          }
         })))
       }
 
