@@ -149,11 +149,10 @@ export default function ProviderDashboard() {
           total_price: booking.total_price,
           status: booking.status,
           tours: {
-            title: booking.tours?.title || ''
+            title: booking.tours?.[0]?.title || ''  // Access first element of tours array
           }
         })))
       }
-
       // Get recent reviews
       const { data: recentReviews, error: recentReviewsError } = await supabase
         .from('reviews')
