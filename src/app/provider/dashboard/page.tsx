@@ -26,7 +26,7 @@ interface BookingWithTour {
   total_price: number
   status: string
   payment_status: string
-  tours: TourBasicInfo  // tour -> tours로 변경
+  tours: TourBasicInfo
 }
 
 export default function ProviderDashboard() {
@@ -115,7 +115,19 @@ export default function ProviderDashboard() {
       }
 
       if (data) {
-        setLatestBookings(data)
+        // 타입 변환을 위한 매핑
+        const processedBookings: BookingWithTour[] = data.map(booking => ({
+          id: booking.id,
+          tour_id: booking.tour_id,
+          booking_date: booking.booking_date,
+          number_of_people: booking.number_of_people,
+          total_price: booking.total_price,
+          status: booking.status,
+          payment_status: booking.payment_status,
+          tours: booking.tours
+        }))
+        
+        setLatestBookings(processedBookings)
       }
 
     } catch (error) {
