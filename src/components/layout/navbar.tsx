@@ -55,9 +55,9 @@ export default function Navbar() {
             </Link>
             {user ? (
               <>
-                {/* <Link href="/profile" className="text-gray-700 hover:text-gray-900">
-                  Profile
-                </Link> */}
+                <Link href="/bookings" className="text-gray-700 hover:text-gray-900">
+                  Bookings
+                </Link>
                 <button
                   onClick={handleSignOut}
                   className="text-gray-700 hover:text-gray-900"
@@ -95,9 +95,9 @@ export default function Navbar() {
               </Link>
               {user ? (
                 <>
-                  {/* <Link href="/profile" className="text-gray-700 hover:text-gray-900">
-                    Profile
-                  </Link> */}
+                  <Link href="/bookings" className="text-gray-700 hover:text-gray-900">
+                    Bookings
+                  </Link>
                   <button
                     onClick={handleSignOut}
                     className="text-gray-700 hover:text-gray-900 text-left"
