@@ -99,33 +99,10 @@ export default function ProviderDashboard() {
           pendingBookings: 0
         })
 
-        // Get reviews for average rating
-        const { data: reviews, error: reviewsError } = await supabase
-          .from('reviews')
-          .select(`
-            rating,
-            tours (
-              provider_id
-            )
-          `)
-          .eq('tours.provider_id', user.id)
-
-        if (reviewsError) {
-          console.error('Reviews error:', reviewsError)
-        }
-
-        if (reviews && reviews.length > 0) {
-          const averageRating = reviews.reduce((sum, review) => sum + (review.rating || 0), 0) / reviews.length
-          setStats({
-            ...calculatedStats,
-            averageRating
-          })
-        } else {
-          setStats({
-            ...calculatedStats,
-            averageRating: 0
-          })
-        }
+        setStats({
+          ...calculatedStats,
+          averageRating: 0
+        })
       }
 
       const { data: latestBookings, error: latestBookingsError } = await supabase
@@ -155,34 +132,6 @@ export default function ProviderDashboard() {
 
       if (latestBookings) {
         setLatestBookings(latestBookings)
-      }
-
-      // Get recent reviews
-      const { data: recentReviews, error: recentReviewsError } = await supabase
-        .from('reviews')
-        .select(`
-          id,
-          rating,
-          comment,
-          created_at,
-          tours (
-            title,
-            provider_id
-          ),
-          profiles (
-            full_name
-          )
-        `)
-        .eq('tours.provider_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(5)
-
-      if (recentReviewsError) {
-        console.error('Recent reviews error:', recentReviewsError)
-      }
-
-      if (recentReviews) {
-        setRecentReviews(recentReviews)
       }
 
     } catch (error) {
@@ -272,39 +221,6 @@ export default function ProviderDashboard() {
             ))}
             {latestBookings.length === 0 && (
               <p className="text-gray-500 text-center">No bookings yet</p>
-            )}
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4">Recent Reviews</h2>
-          <div className="space-y-4">
-            {recentReviews.map((review) => (
-              <div key={review.id} className="border-b pb-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-medium">{review.tours?.title || 'Unnamed Tour'}</p>
-                    <p className="text-sm text-gray-600">{review.profiles?.full_name || 'Anonymous'}</p>
-                    <div className="flex items-center mt-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${
-                            i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-sm mt-1">{review.comment}</p>
-                  </div>
-                  <span className="text-sm text-gray-500">
-                    {new Date(review.created_at).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            ))}
-            {recentReviews.length === 0 && (
-              <p className="text-gray-500 text-center">No reviews yet</p>
             )}
           </div>
         </div>
