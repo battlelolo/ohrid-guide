@@ -122,37 +122,35 @@ export default function ProviderDashboard() {
       }
 
       const { data: latestBookings, error: latestBookingsError } = await supabase
-  .from('bookings')
-  .select(`
-    id,
-    booking_date,
-    number_of_people,
-    total_price,
-    status,
-    tours (
-      title
-    )
-  `)
-  .eq('provider_id', user.id)
-  .order('created_at', { ascending: false })
-  .limit(5);
+        .from('bookings')
+        .select(`
+          id,
+          booking_date,
+          number_of_people,
+          total_price,
+          status,
+          tours:tours (
+            title
+          )
+        `)
+        .eq('provider_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(5)
 
-if (latestBookingsError) {
-  console.error('Latest bookings error:', latestBookingsError);
-}
+      if (latestBookingsError) {
+        console.error('Latest bookings error:', latestBookingsError)
+      }
 
-if (latestBookings) {
-  setLatestBookings(latestBookings.map(booking => ({
-    id: booking.id,
-    booking_date: booking.booking_date,
-    number_of_people: booking.number_of_people,
-    total_price: booking.total_price,
-    status: booking.status,
-    tours: {
-      title: booking.tours.title
-    }
-  })));
-}
+      if (latestBookings) {
+        setLatestBookings(latestBookings.map(booking => ({
+          id: booking.id,
+          booking_date: booking.booking_date,
+          number_of_people: booking.number_of_people,
+          total_price: booking.total_price,
+          status: booking.status,
+          tours: booking.tours as { title: string }
+        })))
+      }
 
       // Get recent reviews
       const { data: recentReviews, error: recentReviewsError } = await supabase
@@ -306,23 +304,3 @@ if (latestBookings) {
     </div>
   )
 }
-
-// import React from 'react';
-
-// const HomePage = () => {
-//   return (
-//     <div>
-//       <header>
-//         <h1>Welcome to My Next.js App</h1>
-//       </header>
-//       <main>
-//         <p>This is the main content of the page.</p>
-//       </main>
-//       <footer>
-//         <p>&copy; 2023 My Next.js App</p>
-//       </footer>
-//     </div>
-//   );
-// };
-
-// export default HomePage;
