@@ -130,7 +130,7 @@ export default function ProviderDashboard() {
       }
 
       if (data) {
-        const processedBookings: BookingWithTour[] = (data as RawBookingData[]).map(booking => ({
+        const processedBookings: BookingWithTour[] = (data as any[]).map(booking => ({
           id: booking.id,
           tour_id: booking.tour_id,
           booking_date: booking.booking_date,
@@ -139,9 +139,9 @@ export default function ProviderDashboard() {
           status: booking.status,
           payment_status: booking.payment_status,
           tours: {
-            id: booking.tours.id,
-            title: booking.tours.title,
-            currency: booking.tours.currency
+            id: booking.tours[0].id,
+            title: booking.tours[0].title,
+            currency: booking.tours[0].currency
           }
         }))
         
