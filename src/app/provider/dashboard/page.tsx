@@ -142,17 +142,22 @@ export default function ProviderDashboard() {
       }
 
       if (latestBookings) {
-        setLatestBookings(latestBookings.map(booking => ({
-          id: booking.id,
-          booking_date: booking.booking_date,
-          number_of_people: booking.number_of_people,
-          total_price: booking.total_price,
-          status: booking.status,
-          tours: {
-            title: booking.tours?.[0]?.title || ''  // Access first element of tours array
+        setLatestBookings(latestBookings.map(booking => {
+          const tourData = Array.isArray(booking.tours) ? booking.tours[0] : booking.tours
+          
+          return {
+            id: booking.id,
+            booking_date: booking.booking_date,
+            number_of_people: booking.number_of_people,
+            total_price: booking.total_price,
+            status: booking.status,
+            tours: {
+              title: tourData?.title || ''
+            }
           }
-        })))
+        }))
       }
+
       // Get recent reviews
       const { data: recentReviews, error: recentReviewsError } = await supabase
         .from('reviews')
