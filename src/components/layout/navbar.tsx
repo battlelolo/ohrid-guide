@@ -60,7 +60,7 @@ export default function Navbar() {
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="text-gray-700 hover:text-gray-900"
+                  className="text-gray-500 hover:text-gray-700"
                 >
                   Sign Out
                 </button>
@@ -68,7 +68,7 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={handleSignIn}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                className="text-gray-500 hover:text-gray-700"
               >
                 Sign In
               </button>
@@ -100,7 +100,7 @@ export default function Navbar() {
                   </Link>
                   <button
                     onClick={handleSignOut}
-                    className="text-gray-700 hover:text-gray-900 text-left"
+                    className="text-gray-500 hover:text-gray-700 text-left"
                   >
                     Sign Out
                   </button>
@@ -108,7 +108,7 @@ export default function Navbar() {
               ) : (
                 <button
                   onClick={handleSignIn}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 w-full"
+                  className="text-gray-500 hover:text-gray-700 text-left"
                 >
                   Sign In
                 </button>
