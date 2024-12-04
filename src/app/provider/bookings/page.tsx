@@ -142,7 +142,7 @@ export default function ProviderBookings() {
                <div className="mt-2 space-y-1 text-sm text-gray-600">
                  <p>Date: {new Date(booking.booking_date).toLocaleDateString()}</p>
                  <p>Guests: {booking.number_of_people}</p>
-                 <p>Total: {booking.tours?.currency || '€'} {booking.total_price}</p>
+                 <p>Total: {booking.tours?.currency || '$'} {booking.total_price}</p>
                  <p>Status: {" "}
                    <span className={`capitalize font-medium ${
                      booking.status === "pending" ? "text-amber-600" :

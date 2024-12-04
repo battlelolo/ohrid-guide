@@ -172,7 +172,7 @@ export default function ProviderDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-500 text-sm">Total Revenue</p>
-              <p className="text-2xl font-bold">€{stats.totalRevenue}</p>
+              <p className="text-2xl font-bold">${stats.totalRevenue}</p>
             </div>
             <DollarSign className="h-8 w-8 text-gray-400" />
           </div>
