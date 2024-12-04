@@ -138,10 +138,14 @@ export default function ProviderDashboard() {
           total_price: booking.total_price,
           status: booking.status,
           payment_status: booking.payment_status,
-          tours: {
-            id: booking.tours[0].id,
-            title: booking.tours[0].title,
-            currency: booking.tours[0].currency
+          tours: booking.tours ? {
+            id: booking.tours.id,
+            title: booking.tours.title,
+            currency: booking.tours.currency
+          } : {
+            id: '',
+            title: 'Unnamed Tour',
+            currency: '$'
           }
         }))
         
