@@ -4,13 +4,18 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Calendar, DollarSign, Users, Star } from 'lucide-react'
-import type { Tour } from '@/types/tour'
 
 interface DashboardStats {
   totalRevenue: number
   totalBookings: number
   pendingBookings: number
   averageRating: number
+}
+
+interface TourBasicInfo {
+  id: string
+  title: string
+  currency: string
 }
 
 interface BookingWithTour {
@@ -21,7 +26,7 @@ interface BookingWithTour {
   total_price: number
   status: string
   payment_status: string
-  tour: Tour
+  tour: TourBasicInfo
 }
 
 export default function ProviderDashboard() {
@@ -85,7 +90,7 @@ export default function ProviderDashboard() {
         })
       }
 
-      const { data: latestBookings, error: latestBookingsError } = await supabase
+      const { data, error: latestBookingsError } = await supabase
         .from('bookings')
         .select(`
           id,
@@ -109,8 +114,8 @@ export default function ProviderDashboard() {
         console.error('Latest bookings error:', latestBookingsError)
       }
 
-      if (latestBookings) {
-        setLatestBookings(latestBookings)
+      if (data) {
+        setLatestBookings(data)
       }
 
     } catch (error) {
@@ -178,7 +183,7 @@ export default function ProviderDashboard() {
               <div key={booking.id} className="border-b pb-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium">{booking.tour?.title || 'Unnamed Tour'}</p>
+                    <p className="font-medium">{booking.tour.title}</p>
                     <p className="text-sm text-gray-600">
                       Date: {new Date(booking.booking_date).toLocaleDateString()}
                     </p>
@@ -190,7 +195,7 @@ export default function ProviderDashboard() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">{booking.tour?.currency || '€'}{booking.total_price}</p>
+                    <p className="font-medium">{booking.tour.currency}{booking.total_price}</p>
                     <span className="text-sm px-2 py-1 rounded-full bg-gray-100">
                       {booking.status}
                     </span>
