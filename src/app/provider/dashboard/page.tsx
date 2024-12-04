@@ -18,9 +18,6 @@ interface LatestBooking {
   number_of_people: number
   total_price: number
   status: string
-  tours: {
-    title: string
-  }
 }
 
 interface Review {
@@ -128,10 +125,7 @@ export default function ProviderDashboard() {
           booking_date,
           number_of_people,
           total_price,
-          status,
-          tours!inner (
-            title
-          )
+          status
         `)
         .eq('provider_id', user.id)
         .order('created_at', { ascending: false })
@@ -142,20 +136,13 @@ export default function ProviderDashboard() {
       }
 
       if (latestBookings) {
-        setLatestBookings(latestBookings.map(booking => {
-          const tourData = Array.isArray(booking.tours) ? booking.tours[0] : booking.tours
-          
-          return {
-            id: booking.id,
-            booking_date: booking.booking_date,
-            number_of_people: booking.number_of_people,
-            total_price: booking.total_price,
-            status: booking.status,
-            tours: {
-              title: tourData?.title || ''
-            }
-          }
-        }))
+        setLatestBookings(latestBookings.map(booking => ({
+          id: booking.id,
+          booking_date: booking.booking_date,
+          number_of_people: booking.number_of_people,
+          total_price: booking.total_price,
+          status: booking.status
+        })))
       }
 
       // Get recent reviews
@@ -251,7 +238,6 @@ export default function ProviderDashboard() {
               <div key={booking.id} className="border-b pb-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium">{booking.tours?.title || 'Unnamed Tour'}</p>
                     <p className="text-sm text-gray-600">
                       Date: {new Date(booking.booking_date).toLocaleDateString()}
                     </p>
