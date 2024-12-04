@@ -12,6 +12,21 @@ interface DashboardStats {
   averageRating: number
 }
 
+interface RawBookingData {
+  id: string
+  tour_id: string
+  booking_date: string
+  number_of_people: number
+  total_price: number
+  status: string
+  payment_status: string
+  tours: {
+    id: string
+    title: string
+    currency: string
+  }
+}
+
 interface TourBasicInfo {
   id: string
   title: string
@@ -115,8 +130,7 @@ export default function ProviderDashboard() {
       }
 
       if (data) {
-        // 타입 변환을 위한 매핑
-        const processedBookings: BookingWithTour[] = data.map(booking => ({
+        const processedBookings: BookingWithTour[] = (data as RawBookingData[]).map(booking => ({
           id: booking.id,
           tour_id: booking.tour_id,
           booking_date: booking.booking_date,
@@ -124,7 +138,11 @@ export default function ProviderDashboard() {
           total_price: booking.total_price,
           status: booking.status,
           payment_status: booking.payment_status,
-          tours: booking.tours
+          tours: {
+            id: booking.tours.id,
+            title: booking.tours.title,
+            currency: booking.tours.currency
+          }
         }))
         
         setLatestBookings(processedBookings)
