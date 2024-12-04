@@ -4,19 +4,13 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Calendar, DollarSign, Users, Star } from 'lucide-react'
+import type { Tour } from '@/types/tour'
 
 interface DashboardStats {
   totalRevenue: number
   totalBookings: number
   pendingBookings: number
   averageRating: number
-}
-
-interface Tour {
-  id: string
-  title: string
-  price: number
-  currency: string
 }
 
 interface LatestBooking {
@@ -27,7 +21,7 @@ interface LatestBooking {
   total_price: number
   status: string
   payment_status: string
-  tours: Tour[]
+  tours: Tour
 }
 
 export default function ProviderDashboard() {
@@ -103,9 +97,25 @@ export default function ProviderDashboard() {
           payment_status,
           tours:tour_id (
             id,
+            provider_id,
             title,
+            description,
             price,
-            currency
+            currency,
+            duration,
+            max_participants,
+            location,
+            longitude,
+            latitude,
+            meeting_point,
+            included_items,
+            excluded_items,
+            requirements,
+            cancellation_policy,
+            average_rating,
+            total_reviews,
+            created_at,
+            updated_at
           )
         `)
         .eq('provider_id', user.id)
@@ -117,11 +127,7 @@ export default function ProviderDashboard() {
       }
 
       if (latestBookings) {
-        const processedBookings = latestBookings.map(booking => ({
-          ...booking,
-          tours: Array.isArray(booking.tours) ? [booking.tours] : [booking.tours]
-        }))
-        setLatestBookings(processedBookings)
+        setLatestBookings(latestBookings)
       }
 
     } catch (error) {
@@ -189,9 +195,7 @@ export default function ProviderDashboard() {
               <div key={booking.id} className="border-b pb-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium">
-                      {booking.tours[0]?.title || 'Unnamed Tour'}
-                    </p>
+                    <p className="font-medium">{booking.tours?.title || 'Unnamed Tour'}</p>
                     <p className="text-sm text-gray-600">
                       Date: {new Date(booking.booking_date).toLocaleDateString()}
                     </p>
@@ -203,7 +207,7 @@ export default function ProviderDashboard() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">{booking.tours[0]?.currency || '€'}{booking.total_price}</p>
+                    <p className="font-medium">{booking.tours?.currency || '€'}{booking.total_price}</p>
                     <span className="text-sm px-2 py-1 rounded-full bg-gray-100">
                       {booking.status}
                     </span>
