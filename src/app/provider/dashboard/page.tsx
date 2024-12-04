@@ -26,7 +26,7 @@ interface BookingWithTour {
   total_price: number
   status: string
   payment_status: string
-  tour: TourBasicInfo
+  tours: TourBasicInfo  // tour -> tours로 변경
 }
 
 export default function ProviderDashboard() {
@@ -100,7 +100,7 @@ export default function ProviderDashboard() {
           total_price,
           status,
           payment_status,
-          tour:tours!inner (
+          tours!inner (
             id,
             title,
             currency
@@ -183,7 +183,7 @@ export default function ProviderDashboard() {
               <div key={booking.id} className="border-b pb-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium">{booking.tour.title}</p>
+                    <p className="font-medium">{booking.tours.title}</p>
                     <p className="text-sm text-gray-600">
                       Date: {new Date(booking.booking_date).toLocaleDateString()}
                     </p>
@@ -195,7 +195,7 @@ export default function ProviderDashboard() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">{booking.tour.currency}{booking.total_price}</p>
+                    <p className="font-medium">{booking.tours.currency}{booking.total_price}</p>
                     <span className="text-sm px-2 py-1 rounded-full bg-gray-100">
                       {booking.status}
                     </span>
