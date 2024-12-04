@@ -13,7 +13,7 @@ interface DashboardStats {
   averageRating: number
 }
 
-interface LatestBooking {
+interface BookingWithTour {
   id: string
   tour_id: string
   booking_date: string
@@ -21,7 +21,7 @@ interface LatestBooking {
   total_price: number
   status: string
   payment_status: string
-  tours: Tour
+  tour: Tour
 }
 
 export default function ProviderDashboard() {
@@ -31,7 +31,7 @@ export default function ProviderDashboard() {
     pendingBookings: 0,
     averageRating: 0
   })
-  const [latestBookings, setLatestBookings] = useState<LatestBooking[]>([])
+  const [latestBookings, setLatestBookings] = useState<BookingWithTour[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -86,20 +86,21 @@ export default function ProviderDashboard() {
       }
 
       const { data: latestBookings, error: latestBookingsError } = await supabase
-  .from('bookings')
-  .select(`
-    id,
-    tour_id,
-    booking_date,
-    number_of_people,
-    total_price,
-    status,
-    payment_status,
-    tours!inner ( 
-      id,
-      title
-    )
-  `)
+        .from('bookings')
+        .select(`
+          id,
+          tour_id,
+          booking_date,
+          number_of_people,
+          total_price,
+          status,
+          payment_status,
+          tour:tours!inner (
+            id,
+            title,
+            currency
+          )
+        `)
         .eq('provider_id', user.id)
         .order('created_at', { ascending: false })
         .limit(5)
@@ -177,7 +178,7 @@ export default function ProviderDashboard() {
               <div key={booking.id} className="border-b pb-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium">{booking.tours?.title || 'Unnamed Tour'}</p>
+                    <p className="font-medium">{booking.tour?.title || 'Unnamed Tour'}</p>
                     <p className="text-sm text-gray-600">
                       Date: {new Date(booking.booking_date).toLocaleDateString()}
                     </p>
@@ -189,7 +190,7 @@ export default function ProviderDashboard() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">{booking.tours?.currency || '€'}{booking.total_price}</p>
+                    <p className="font-medium">{booking.tour?.currency || '€'}{booking.total_price}</p>
                     <span className="text-sm px-2 py-1 rounded-full bg-gray-100">
                       {booking.status}
                     </span>
