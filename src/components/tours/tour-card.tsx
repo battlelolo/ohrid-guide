@@ -22,7 +22,7 @@ export default function TourCard({ tour }: TourCardProps) {
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-gray-200" />
+            <div className="w-full h-full bg-gray-900" />
           )}
         </div>
         

@@ -48,7 +48,7 @@ export default function ReviewList({ tourId }: { tourId: string }) {
       {reviews.map((review) => (
         <div key={review.id} className="border-b pb-4">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-gray-900 flex-shrink-0">
               {review.profiles.avatar_url && (
                 <img
                   src={review.profiles.avatar_url}
