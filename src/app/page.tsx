@@ -51,7 +51,7 @@ export default async function Home() {
                 />
               </div>
               <div className="p-6">
-                <h2 className="text-xl font-semibold mb-2 group-hover:text-blue-600">
+                <h2 className="text-xl font-semibold mb-2 text-gray-700 group-hover:text-blue-600">
                   {tour.title}
                 </h2>
                 <p className="text-gray-600 mb-4 line-clamp-2">
